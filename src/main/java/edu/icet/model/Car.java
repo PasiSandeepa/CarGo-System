@@ -8,7 +8,7 @@ import lombok.*;
 @NoArgsConstructor
 @ToString
 public class Car {
-    private long id;
+    private long carid;
     private  String brand;
     private  String model;
     private  String color;

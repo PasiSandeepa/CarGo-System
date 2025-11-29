@@ -1,4 +1,4 @@
-package edu.icet.model;
+package edu.icet.model.dto.car;
 
 import lombok.*;
 
@@ -7,17 +7,17 @@ import lombok.*;
 @AllArgsConstructor
 @NoArgsConstructor
 @ToString
-public class Car {
+public class CarResponseDto {
     private long carid;
-    private  String brand;
-    private  String model;
-    private  String color;
-    private  int year;
-    private  double pricePerDay;
+    private String brand;
+    private String model;
+    private String color;
+    private int year;
+    private double pricePerDay;
     private String type;
     private int seats;
     private String fuelType;
     private String registrationNo;
     private Double engineCapacity;
-    private Boolean available = true;
+    private Boolean available;
 }

@@ -1,23 +1,22 @@
 package edu.icet.model.dto.booking;
 
-import edu.icet.model.dto.Car;
-import edu.icet.model.dto.Customer;
+import edu.icet.model.dto.car.CarDto;
+import edu.icet.model.dto.customer.CustomerDto;
 import lombok.*;
 
 import java.time.LocalDate;
 @Getter
 @Setter
-@AllArgsConstructor
 @NoArgsConstructor
+@AllArgsConstructor
 @ToString
-public class Bookingdto {
-    private Long bookid;
-    private Customer customerid;
-    private Car carid;
+public class BookingResponseDto {
+    private Long bookId;
+    private CustomerDto customer;
+    private CarDto car;
     private String bookingDate;
     private LocalDate startDate;
     private LocalDate endDate;
     private Double totalAmount;
     private String bookingStatus;
-
 }

@@ -8,7 +8,7 @@ import java.time.LocalDate;
 @NoArgsConstructor
 @AllArgsConstructor
 @ToString
-public class BookingRequestdto {
+public class BookingRequestDto {
     private Long customerId;
     private Long carId;
     private LocalDate startDate;

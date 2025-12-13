@@ -64,5 +64,12 @@ public class CarServiceImpl implements CarService {
         return modelMapper.map(car, CarResponseDto.class);
     }
 
-
+    @Override
+    public boolean deleteCar(Long id) {
+        if (carRepository.existsById(id)) {
+            carRepository.deleteById(id);
+            return true;
+        }
+        return false;
+    }
 }

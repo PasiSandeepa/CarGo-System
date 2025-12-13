@@ -12,5 +12,5 @@ public interface CarService {
    List<CarResponseDto>getAllCars();
   List<CarResponseDto>getAvailableCars();
    CarResponseDto updateCar(Long id, CarRequestDto dto);
-//    boolean deleteCar(Long id);
+  boolean deleteCar(Long id);
 }

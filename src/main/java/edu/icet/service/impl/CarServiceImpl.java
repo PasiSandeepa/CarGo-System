@@ -34,5 +34,11 @@ public class CarServiceImpl implements CarService {
         return modelMapper.map(car, CarResponseDto.class);
     }
 
-
+    @Override
+    public List<CarResponseDto> getAllCars() {
+        return carRepository.findAll()
+                .stream()
+                .map(car -> modelMapper.map(car, CarResponseDto.class))
+                .toList();
+    }
 }

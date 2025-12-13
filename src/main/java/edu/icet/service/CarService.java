@@ -9,7 +9,7 @@ import java.util.List;
 public interface CarService {
     CarResponseDto saveCar(CarRequestDto dto);
    CarResponseDto getCar(Long id);
-//    List<CarResponseDto>getAllCars();
+   List<CarResponseDto>getAllCars();
 //    List<CarResponseDto>getAvailableCars();
 //    CarResponseDto updateCar(Long id, CarRequestDto dto);
 //    boolean deleteCar(Long id);

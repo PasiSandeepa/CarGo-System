@@ -50,5 +50,19 @@ public class CarServiceImpl implements CarService {
                 .toList();
     }
 
+    @Override
+    public CarResponseDto updateCar(Long id, CarRequestDto dto) {
+        Car car = carRepository.findById(id).orElse(null);
+
+        if (car == null) {
+            return null;
+        }
+
+        modelMapper.map(dto, car);
+        carRepository.save(car);
+
+        return modelMapper.map(car, CarResponseDto.class);
+    }
+
 
 }

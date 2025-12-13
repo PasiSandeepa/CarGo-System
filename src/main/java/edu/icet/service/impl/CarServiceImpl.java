@@ -25,5 +25,14 @@ public class CarServiceImpl implements CarService {
         return modelMapper.map(car, CarResponseDto.class);
     }
 
+    @Override
+    public CarResponseDto getCar(Long id) {
+        Car car = carRepository.findById(id).orElse(null);
+        if (car == null) {
+            return null;
+        }
+        return modelMapper.map(car, CarResponseDto.class);
+    }
+
 
 }

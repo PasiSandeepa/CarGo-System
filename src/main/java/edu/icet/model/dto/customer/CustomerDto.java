@@ -18,4 +18,5 @@ public class CustomerDto {
     private String password;
     private String status;
     private LocalDateTime createdAt = LocalDateTime.now();
+    private String nic;
 }

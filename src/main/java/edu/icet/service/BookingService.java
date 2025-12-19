@@ -10,4 +10,5 @@ public interface BookingService {
     void addBooking(BookingRequestDto bookingRequestDto);
     List <BookingResponseDto>getAllBookings();
     void cancelBooking(Long bookingId);
+    void deleteBooking(Long bookingId);
 }

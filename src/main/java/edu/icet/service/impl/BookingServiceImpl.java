@@ -73,4 +73,17 @@ public class BookingServiceImpl implements BookingService {
         carRepository.save(car);
         bookRepository.save(booking);
     }
+    @Transactional
+    @Override
+    public void deleteBooking(Long bookingId) {
+       Booking booking = bookRepository.findById(bookingId)
+               .orElseThrow(() -> new RuntimeException("Booking not found"));
+
+       if(!"CANCELLED".equals(booking.getBookingStatus())) {
+           Car car = booking.getCar();
+           car.setAvailable(true);
+           carRepository.save(car);
+       }
+         bookRepository.delete(booking);
+    }
 }

@@ -1,6 +1,7 @@
 package edu.icet.service.impl;
 
 import edu.icet.model.dto.booking.BookingRequestDto;
+import edu.icet.model.dto.booking.BookingResponseDto;
 import edu.icet.model.entity.Booking;
 import edu.icet.model.entity.Car;
 import edu.icet.repository.BookRepository;
@@ -13,6 +14,9 @@ import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
+import java.util.List;
+import java.util.stream.Collectors;
+
 @RequiredArgsConstructor
 @Service
 public class BookingServiceImpl implements BookingService {
@@ -47,5 +51,26 @@ public class BookingServiceImpl implements BookingService {
 
 
         bookRepository.save(bookingEntity);
+    }
+
+    @Override
+    public List<BookingResponseDto> getAllBookings() {
+        return bookRepository.findAll().stream()
+                .map(booking -> {
+                    return modelMapper.map(booking, BookingResponseDto.class);
+                })
+                .collect(Collectors.toList());
+    }
+    @Transactional
+    @Override
+    public void cancelBooking(Long bookingId) {
+        Booking booking = bookRepository.findById(bookingId)
+                .orElseThrow(() -> new RuntimeException("Booking not found"));
+        booking.setBookingStatus("CANCELLED");
+
+        Car car = booking.getCar();
+        car.setAvailable(true);
+        carRepository.save(car);
+        bookRepository.save(booking);
     }
 }

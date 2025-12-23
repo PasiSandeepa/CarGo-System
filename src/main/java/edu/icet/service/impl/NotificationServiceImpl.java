@@ -37,4 +37,12 @@ public class NotificationServiceImpl implements NotificationService {
 
         return responseList;
     }
+
+    @Override
+    public void markAsRead(Long notificationId) {
+        repository.findById(notificationId).ifPresent(entity -> {
+            entity.setState("READ");
+            repository.save(entity);
+        });
+    }
 }

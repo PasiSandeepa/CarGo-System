@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+@RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/v1/booking")
 @CrossOrigin
@@ -17,9 +18,17 @@ public class BookingController {
     private final BookingService bookingService;
 
     @PostMapping("/add")
-    public ResponseEntity<String> addBooking(@RequestBody BookingRequestDto dto) {
-        bookingService.addBooking(dto);
-        return ResponseEntity.ok("Booking Added Successfully");
+    public ResponseEntity<?> addBooking(@RequestBody BookingRequestDto dto) {
+        try {
+            bookingService.addBooking(dto);
+            return ResponseEntity.ok("Booking Added Successfully");
+        } catch (IllegalArgumentException e) {
+
+            return ResponseEntity.badRequest().body("Error: " + e.getMessage());
+        } catch (Exception e) {
+
+            return ResponseEntity.internalServerError().body("Server Error: " + e.getMessage());
+        }
     }
 
     @GetMapping("/get-all")
@@ -35,5 +44,10 @@ public class BookingController {
     public ResponseEntity<String> deleteBooking(@PathVariable Long id) {
         bookingService.deleteBooking(id);
         return ResponseEntity.ok("Booking Deleted");
+    }
+
+    @GetMapping("/get-by-customer/{customerId}")
+    public List<BookingResponseDto> getBookingsByCustomerId(@PathVariable Long customerId) {
+        return bookingService.getBookingsByCustomerId(customerId);
     }
 }

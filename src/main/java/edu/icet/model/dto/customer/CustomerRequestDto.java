@@ -14,4 +14,5 @@ public class CustomerRequestDto {
     private String phoneNumber;
     private String address;
     private String password;
+    private String nic;
 }

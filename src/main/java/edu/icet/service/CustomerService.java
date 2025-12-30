@@ -9,4 +9,6 @@ public interface CustomerService {
     void addCustomer(CustomerRequestDto dto);
     CustomerResponseDto login(String email, String password);
     List<CustomerResponseDto> getAllCustomers();
+    CustomerResponseDto getCustomerById(Integer id);
+    void deleteCustomer(Integer id);
 }

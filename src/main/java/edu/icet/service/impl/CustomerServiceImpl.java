@@ -30,13 +30,28 @@ public class CustomerServiceImpl implements CustomerService {
     public CustomerResponseDto login(String email, String password) {
 
         Customer customer = customerRepository.findByEmail(email)
-                .orElseThrow(() -> new RuntimeException("User not found"));
+                .orElseThrow(() -> new RuntimeException("Email address not found!"));
+
+        String dbPassword = customer.getPassword().trim();
+        String inputPassword = password.trim();
+
+        if (dbPassword.equals(inputPassword)) {
+
+            CustomerResponseDto response = new CustomerResponseDto();
 
 
-        if (customer.getPassword().equals(password)) {
-            return modelMapper.map(customer, CustomerResponseDto.class);
+            response.setCustomerid(customer.getCustomerId());
+
+            response.setFirstName(customer.getFirstName());
+            response.setLastName(customer.getLastName());
+            response.setEmail(customer.getEmail());
+            response.setNic(customer.getNic());
+            response.setPhoneNumber(customer.getPhoneNumber());
+            response.setAddress(customer.getAddress());
+
+            return response;
         } else {
-            throw new RuntimeException("Invalid credentials");
+            throw new RuntimeException("Password incorrect!");
         }
     }
 
@@ -45,5 +60,23 @@ public class CustomerServiceImpl implements CustomerService {
         return customerRepository.findAll().stream()
                 .map(customer -> modelMapper.map(customer, CustomerResponseDto.class))
                 .collect(Collectors.toList());
+    }
+
+    @Override
+    public CustomerResponseDto getCustomerById(Integer id) {
+
+        Customer customer = customerRepository.findById(Long.valueOf(id))
+                .orElseThrow(() -> new RuntimeException("Customer not found with id: " + id));
+
+
+        return modelMapper.map(customer, CustomerResponseDto.class);
+    }
+    @Override
+    public void deleteCustomer(Integer id) {
+        if (customerRepository.existsById(Long.valueOf(id))) {
+            customerRepository.deleteById(Long.valueOf(id));
+        } else {
+            throw new RuntimeException("Customer not found with ID: " + id);
+        }
     }
 }

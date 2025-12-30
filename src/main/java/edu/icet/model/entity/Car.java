@@ -48,4 +48,6 @@ public class Car {
 
     @Column(name = "image_url")
     private String imageUrl = "";
+
+    private String transmission;
 }

@@ -13,5 +13,5 @@ public class BookingRequestDto {
     private Long carId;
     private LocalDate startDate;
     private LocalDate endDate;
-
+    private Double totalAmount;
 }

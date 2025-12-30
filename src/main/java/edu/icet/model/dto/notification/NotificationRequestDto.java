@@ -11,4 +11,6 @@ public class NotificationRequestDto {
     private Long customerId;
     private Long bookingId;
     private String message;
+
+
 }

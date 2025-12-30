@@ -2,6 +2,7 @@ package edu.icet.controller;
 
 import edu.icet.model.dto.booking.BookingRequestDto;
 import edu.icet.model.dto.booking.BookingResponseDto;
+import edu.icet.model.entity.Booking;
 import edu.icet.service.BookingService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -20,13 +21,12 @@ public class BookingController {
     @PostMapping("/add")
     public ResponseEntity<?> addBooking(@RequestBody BookingRequestDto dto) {
         try {
-            bookingService.addBooking(dto);
-            return ResponseEntity.ok("Booking Added Successfully");
+            // සේවාව මගින් අලුතින් සෑදූ Booking එක (ID එක සහිතව) ලබා ගන්න
+            BookingResponseDto response = bookingService.addBooking(dto);
+            return ResponseEntity.ok(response); // String එකක් වෙනුවට Object එකම යවන්න
         } catch (IllegalArgumentException e) {
-
             return ResponseEntity.badRequest().body("Error: " + e.getMessage());
         } catch (Exception e) {
-
             return ResponseEntity.internalServerError().body("Server Error: " + e.getMessage());
         }
     }

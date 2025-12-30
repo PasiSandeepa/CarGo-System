@@ -2,12 +2,15 @@ package edu.icet.service.impl;
 
 import edu.icet.model.dto.booking.BookingRequestDto;
 import edu.icet.model.dto.booking.BookingResponseDto;
+
+import edu.icet.model.dto.notification.NotificationRequestDto;
 import edu.icet.model.entity.Booking;
 import edu.icet.model.entity.Car;
 import edu.icet.repository.BookRepository;
 import edu.icet.repository.CarRepository;
 import edu.icet.repository.CustomerRepository;
 import edu.icet.service.BookingService;
+import edu.icet.service.NotificationService;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
@@ -25,34 +28,54 @@ public class BookingServiceImpl implements BookingService {
     private final CarRepository carRepository;
     private final CustomerRepository customerRepository;
     private final BookRepository bookRepository;
+    private final NotificationService notificationService;
 
     @Transactional
     @Override
-    public void addBooking(BookingRequestDto bookingRequestDto) { // Void -> void ලෙස වෙනස් කළා
-        Car car = carRepository.findById(bookingRequestDto.getCarId())
+    public BookingResponseDto addBooking(BookingRequestDto dto) {
+        Booking entity = new Booking();
+
+
+        edu.icet.entity.Customer customer = customerRepository.findById(dto.getCustomerId())
+                .orElseThrow(() -> new RuntimeException("Customer not found"));
+
+        Car car = carRepository.findById(dto.getCarId())
                 .orElseThrow(() -> new RuntimeException("Car not found"));
 
 
-        edu.icet.entity.Customer customer = customerRepository.findById(bookingRequestDto.getCustomerId())
-                .orElseThrow(() -> new RuntimeException("Customer not found"));
-
-
-        Booking bookingEntity = modelMapper.map(bookingRequestDto, Booking.class);
-
-
-        bookingEntity.setCar(car);
-        bookingEntity.setCustomer(customer);
-        bookingEntity.setBookingDate(LocalDate.now());
-        bookingEntity.setBookingStatus("CONFIRMED");
+        entity.setCustomer(customer);
+        entity.setCar(car);
+        entity.setStartDate(dto.getStartDate());
+        entity.setEndDate(dto.getEndDate());
+        entity.setTotalAmount(dto.getTotalAmount());
+        entity.setBookingStatus("CONFIRMED");
+        entity.setBookingDate(LocalDate.now());
 
 
         car.setAvailable(false);
         carRepository.save(car);
 
 
-        bookRepository.save(bookingEntity);
-    }
+        Booking savedBooking = bookRepository.save(entity);
 
+
+        if (savedBooking != null) {
+
+            NotificationRequestDto customerNote = new NotificationRequestDto();
+            customerNote.setCustomerId(dto.getCustomerId());
+            customerNote.setBookingId(savedBooking.getBookId());
+            customerNote.setMessage("Your " + car.getModel() + " Booking Succesfully! (Booking ID: #" + savedBooking.getBookId() + ")");
+            notificationService.createNotification(customerNote);
+
+
+            NotificationRequestDto adminNote = new NotificationRequestDto();
+            adminNote.setCustomerId(5L);
+            adminNote.setBookingId(savedBooking.getBookId());
+            adminNote.setMessage("Got a new booking.ා! Customer: " + customer.getFirstName() + " " + customer.getLastName());
+            notificationService.createNotification(adminNote);
+        }
+        return modelMapper.map(savedBooking, BookingResponseDto.class);
+    }
     @Override
     public List<BookingResponseDto> getAllBookings() {
         return bookRepository.findAll().stream()
@@ -61,6 +84,7 @@ public class BookingServiceImpl implements BookingService {
                 })
                 .collect(Collectors.toList());
     }
+
     @Transactional
     @Override
     public void cancelBooking(Long bookingId) {
@@ -73,17 +97,27 @@ public class BookingServiceImpl implements BookingService {
         carRepository.save(car);
         bookRepository.save(booking);
     }
+
     @Transactional
     @Override
     public void deleteBooking(Long bookingId) {
-       Booking booking = bookRepository.findById(bookingId)
-               .orElseThrow(() -> new RuntimeException("Booking not found"));
+        Booking booking = bookRepository.findById(bookingId)
+                .orElseThrow(() -> new RuntimeException("Booking not found"));
 
-       if(!"CANCELLED".equals(booking.getBookingStatus())) {
-           Car car = booking.getCar();
-           car.setAvailable(true);
-           carRepository.save(car);
-       }
-         bookRepository.delete(booking);
+        if (!"CANCELLED".equals(booking.getBookingStatus())) {
+            Car car = booking.getCar();
+            car.setAvailable(true);
+            carRepository.save(car);
+        }
+        bookRepository.delete(booking);
     }
+
+    @Override
+    public List<BookingResponseDto> getBookingsByCustomerId(Long customerId) {
+        return bookRepository.findAll().stream()
+                .filter(booking -> booking.getCustomer().getCustomerId().equals(customerId))
+                .map(booking -> modelMapper.map(booking, BookingResponseDto.class))
+                .collect(Collectors.toList());
+    }
+
 }

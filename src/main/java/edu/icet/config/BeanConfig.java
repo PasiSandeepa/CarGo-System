@@ -15,10 +15,9 @@ public class BeanConfig {
         ModelMapper modelMapper = new ModelMapper();
 
         modelMapper.getConfiguration()
-                .setSourceNamingConvention(NamingConventions.NONE) // JSON fields snake_case නම්
-                .setDestinationNamingConvention(NamingConventions.JAVABEANS_MUTATOR)
                 .setFieldMatchingEnabled(true)
                 .setFieldAccessLevel(AccessLevel.PRIVATE)
+
                 .setMatchingStrategy(MatchingStrategies.STRICT);
 
         return modelMapper;

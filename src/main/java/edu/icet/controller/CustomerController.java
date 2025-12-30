@@ -13,7 +13,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/v1/customer")
 @RequiredArgsConstructor
-@CrossOrigin
+
 public class CustomerController {
     private final CustomerService customerService;
 
@@ -34,6 +34,16 @@ public class CustomerController {
     @GetMapping("/get-all")
     public List<CustomerResponseDto> getAll() {
         return customerService.getAllCustomers();
+    }
+    @GetMapping("/get-by-id/{id}")
+    public ResponseEntity<CustomerResponseDto> getCustomerById(@PathVariable Integer id) {
+        CustomerResponseDto customer = customerService.getCustomerById(id);
+        return ResponseEntity.ok(customer);
+    }
+    @DeleteMapping("/delete/{id}")
+    public ResponseEntity<String> deleteCustomer(@PathVariable Integer id) {
+        customerService.deleteCustomer(id);
+        return ResponseEntity.ok("Customer Deleted Successfully");
     }
 }
 

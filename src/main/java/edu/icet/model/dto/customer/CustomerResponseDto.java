@@ -17,4 +17,6 @@ public class CustomerResponseDto {
     private String address;
     private String status;
     private LocalDateTime createdAt;
+    private String nic;
+    private String role;
 }

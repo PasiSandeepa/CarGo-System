@@ -14,7 +14,7 @@ public class BookingResponseDto {
     private Long bookId;
     private CustomerDto customer;
     private CarDto car;
-    private String bookingDate;
+    private LocalDate bookingDate;
     private LocalDate startDate;
     private LocalDate endDate;
     private Double totalAmount;

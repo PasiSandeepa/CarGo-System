@@ -1,5 +1,6 @@
 package edu.icet.model.dto.car;
 
+
 import lombok.*;
 
 @Setter
@@ -20,4 +21,12 @@ public class CarResponseDto {
     private String registrationNo;
     private Double engineCapacity;
     private Boolean available;
+
+
+    private String imageUrl;
+    private Double pickupLat;
+    private Double pickupLng;
+
+    private String pickupAddress;
+    private String transmission;
 }
